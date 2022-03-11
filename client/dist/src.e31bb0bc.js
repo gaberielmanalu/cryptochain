@@ -28659,7 +28659,7 @@ var App = /*#__PURE__*/function (_Component) {
         to: "/blocks"
       }, "Blocks")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/conduct-transaction"
-      }, "Conduct a Transaction ")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }, "Conduct a Transaction")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/transaction-pool"
       }, "Transaction Pool")), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", {
         className: "WalletInfo"
@@ -46665,7 +46665,7 @@ var Block = /*#__PURE__*/function (_Component) {
       displayTransaction: false
     });
 
-    _defineProperty(_assertThisInitialized(_this), "toogleTransaction", function () {
+    _defineProperty(_assertThisInitialized(_this), "toggleTransaction", function () {
       _this.setState({
         displayTransaction: !_this.state.displayTransaction
       });
@@ -46691,14 +46691,14 @@ var Block = /*#__PURE__*/function (_Component) {
         }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
           bsStyle: "danger",
           bsSize: "small",
-          onClick: this.toogleTransaction
+          onClick: this.toggleTransaction
         }, "Show Less"));
       }
 
       return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", null, "Data: ", dataDisplay), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
         bsStyle: "danger",
         bsSize: "small",
-        onClick: this.toogleTransaction
+        onClick: this.toggleTransaction
       }, "Show More"));
     }
   }, {
@@ -46710,7 +46710,7 @@ var Block = /*#__PURE__*/function (_Component) {
       var hashDisplay = "".concat(hash.substring(0, 15), "...");
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "Block"
-      }, /*#__PURE__*/_react.default.createElement("div", null, "Hash: ", hashDisplay), /*#__PURE__*/_react.default.createElement("div", null, "timestamp: ", new Date(timestamp).toLocaleString()), this.displayTransaction);
+      }, /*#__PURE__*/_react.default.createElement("div", null, "Hash: ", hashDisplay), /*#__PURE__*/_react.default.createElement("div", null, "Timestamp: ", new Date(timestamp).toLocaleString()), this.displayTransaction);
     }
   }]);
 
@@ -46940,7 +46940,7 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "ConductTransaction", function () {
+    _defineProperty(_assertThisInitialized(_this), "conductTransaction", function () {
       var _this$state = _this.state,
           recipient = _this$state.recipient,
           amount = _this$state.amount;
@@ -47286,7 +47286,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58116" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50972" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

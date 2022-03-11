@@ -1,41 +1,39 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { FormGroup, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import history from '../history';
 
-class ConductTransaction extends Component{
-    state = { recipient: '', amount: 0, knownAddresses: []};
+class ConductTransaction extends Component {
+  state = { recipient: '', amount: 0, knownAddresses: [] };
 
-    componentDidMount() {
-        fetch(`${document.location.origin}/api/known-addresses`)
-          .then(response => response.json())
-          .then(json => this.setState({ knownAddresses: json }));
-      }
-     
+  componentDidMount() {
+    fetch(`${document.location.origin}/api/known-addresses`)
+      .then(response => response.json())
+      .then(json => this.setState({ knownAddresses: json }));
+  }
 
-    updateRecipient = event => {
-        this.setState({ recipient: event.target.value});
-    }    
+  updateRecipient = event => {
+    this.setState({ recipient: event.target.value });
+  }
 
-    updateAmount= event => {
-        this.setState({ amount: Number(event.target.value)});
-    }
+  updateAmount = event => {
+    this.setState({ amount: Number(event.target.value) });
+  }
 
-    ConductTransaction = () =>{
-        const { recipient, amount } = this.state;
+  conductTransaction = () => {
+    const { recipient, amount } = this.state;
 
-        fetch(`${document.location.origin}/api/transact`,{
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({recipient,amount})
-        }).then(response =>response.json())
-        .then(json => {
-            alert(json.message || json.type );
-            history.push('/transaction-pool');
-        });
-    }
+    fetch(`${document.location.origin}/api/transact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipient, amount })
+    }).then(response => response.json())
+      .then(json => {
+        alert(json.message || json.type);
+        history.push('/transaction-pool');
+      });
+  }
 
-   
   render() {
     return (
       <div className='ConductTransaction'>
