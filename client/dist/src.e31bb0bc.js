@@ -47060,7 +47060,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var POLL_INERVAL_MS = 10000;
+var POLL_INERVAL_MS = 1000;
 
 var TransactionPool = /*#__PURE__*/function (_Component) {
   _inherits(TransactionPool, _Component);
@@ -47286,7 +47286,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50972" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58018" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

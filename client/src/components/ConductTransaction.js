@@ -33,7 +33,7 @@ class ConductTransaction extends Component {
         history.push('/transaction-pool');
       });
   }
-
+  
   render() {
     return (
       <div className='ConductTransaction'>
