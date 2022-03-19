@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import history from '../history';
 
 class ConductTransaction extends Component {
-  state = { recipient: '', amount: 0, knownAddresses: [] };
+  state = { recipient: '', amount: 0, price: 0,  knownAddresses: [] };
 
   componentDidMount() {
     fetch(`${document.location.origin}/api/known-addresses`)
@@ -20,13 +20,17 @@ class ConductTransaction extends Component {
     this.setState({ amount: Number(event.target.value) });
   }
 
+  updatePrice = event => {
+    this.setState({ price: Number(event.target.value) });
+  }
+
   conductTransaction = () => {
-    const { recipient, amount } = this.state;
+    const { recipient, amount, price } = this.state;
 
     fetch(`${document.location.origin}/api/transact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipient, amount })
+      body: JSON.stringify({ recipient, amount, price })
     }).then(response => response.json())
       .then(json => {
         alert(json.message || json.type);
@@ -66,6 +70,14 @@ class ConductTransaction extends Component {
             placeholder='amount'
             value={this.state.amount}
             onChange={this.updateAmount}
+          />
+        </FormGroup>
+        <FormGroup>
+          <FormControl
+            input='number'
+            placeholder='price'
+            value={this.state.price}
+            onChange={this.updatePrice}
           />
         </FormGroup>
         <div>

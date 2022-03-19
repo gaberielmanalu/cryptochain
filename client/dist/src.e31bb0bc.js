@@ -28659,7 +28659,7 @@ var App = /*#__PURE__*/function (_Component) {
         to: "/blocks"
       }, "Blocks")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/conduct-transaction"
-      }, "Conduct a Transaction")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }, "Jual Beli")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/transaction-pool"
       }, "Transaction Pool")), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", {
         className: "WalletInfo"
@@ -46588,14 +46588,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Transaction = function Transaction(_ref) {
   var transaction = _ref.transaction;
   var input = transaction.input,
-      outputMap = transaction.outputMap;
+      outputMap = transaction.outputMap,
+      detail = transaction.detail;
   var recipients = Object.keys(outputMap);
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "Transaction"
   }, /*#__PURE__*/_react.default.createElement("div", null, "From: ", "".concat(input.address.substring(0, 20), "..."), " | Balance: ", input.amount), recipients.map(function (recipient) {
-    return /*#__PURE__*/_react.default.createElement("div", {
+    return detail[recipient] ? /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
-    }, "To: ", "".concat(recipient.substring(0, 20), "..."), " | Sent: ", outputMap[recipient]);
+    }, "To: ", "".concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " liter"), " | Price: ", "".concat(detail[recipient], " /liter")) : /*#__PURE__*/_react.default.createElement("div", {
+      key: recipient
+    });
   }));
 };
 
@@ -46925,6 +46928,7 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
     _defineProperty(_assertThisInitialized(_this), "state", {
       recipient: '',
       amount: 0,
+      price: 0,
       knownAddresses: []
     });
 
@@ -46940,10 +46944,17 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "updatePrice", function (event) {
+      _this.setState({
+        price: Number(event.target.value)
+      });
+    });
+
     _defineProperty(_assertThisInitialized(_this), "conductTransaction", function () {
       var _this$state = _this.state,
           recipient = _this$state.recipient,
-          amount = _this$state.amount;
+          amount = _this$state.amount,
+          price = _this$state.price;
       fetch("".concat(document.location.origin, "/api/transact"), {
         method: 'POST',
         headers: {
@@ -46951,7 +46962,8 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
         },
         body: JSON.stringify({
           recipient: recipient,
-          amount: amount
+          amount: amount,
+          price: price
         })
       }).then(function (response) {
         return response.json();
@@ -46999,6 +47011,11 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
         placeholder: "amount",
         value: this.state.amount,
         onChange: this.updateAmount
+      })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+        input: "number",
+        placeholder: "price",
+        value: this.state.price,
+        onChange: this.updatePrice
       })), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
         bsStyle: "danger",
         onClick: this.conductTransaction
@@ -47286,7 +47303,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58018" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65160" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
