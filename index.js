@@ -95,6 +95,13 @@ app.get('/api/mine-transactions', (req, res) => {
   res.redirect('/api/blocks');
 });
 
+app.post('/api/production', (req, res) => {
+   const { amount } = req.body;
+  transactionMiner.mineProduction({amount});
+
+  res.json({ type: 'success' }); 
+});
+
 app.get('/api/wallet-info', (req, res) => {
   const address = wallet.publicKey;
 

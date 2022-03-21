@@ -85,6 +85,13 @@ class Transaction {
       outputMap: { [minerWallet.publicKey]: MINING_REWARD }
     });
   }
+
+  static inputProduction({ minerWallet, amount }) {
+    return new this({
+      input: REWARD_INPUT,
+      outputMap: { [minerWallet.publicKey]: amount }
+    });
+  }
 }
 
 module.exports = Transaction;
