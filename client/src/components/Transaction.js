@@ -6,12 +6,12 @@ const Transaction = ({ transaction }) => {
 
   return (
     <div className='Transaction'>
-      <div>From: {`${input.address.substring(0, 20)}...`} | Balance: {input.amount}</div>
+      <div>From: {`${input.senderName} || ${input.address.substring(0, 20)}...`} | Balance: {input.amount}</div>
       {
           recipients.map(recipient => (
             detail[recipient] ? (
               <div key={recipient}>
-                To: {`${recipient.substring(0, 20)}...`} | Sent: {`${outputMap[recipient]} liter`} | Price: {`${detail[recipient]} /liter`}
+                To: {`${input.recipientName} || ${recipient.substring(0, 20)}...`} | Sent: {`${outputMap[recipient]} liter`} | Price: {`${detail[recipient]} /liter`}
               </div>
             ) : (
             <div key={recipient}>

@@ -18,6 +18,8 @@ class WalletPool {
 
     return accounts.find(account => account.publicKey === inputAddress);
   }
+
+  
 }
 
 module.exports = WalletPool;

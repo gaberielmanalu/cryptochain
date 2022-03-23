@@ -68,16 +68,21 @@ app.post('/api/transact', (req, res) => {
   let transaction = transactionPool
     .existingTransaction({ inputAddress: wallet.publicKey });
 
-  let existAccount = walletPool.existingAccount({inputAddress: recipient});
+  let recipientAccount = walletPool.existingAccount({inputAddress: recipient});
+
+  let senderAccount = walletPool.existingAccount({inputAddress: wallet.publicKey});
 
 
   try {
-    if(existAccount){
+    if(recipientAccount){
       if (transaction) {
-        transaction.update({ senderWallet: wallet, recipient, amount, price});
+        transaction.update({ 
+          senderWallet: wallet, senderName: senderAccount.name , recipient, recipientName: recipientAccount.name, amount, price});
       } else {
         transaction = wallet.createTransaction({
           recipient,
+          senderName: senderAccount.name,
+          recipientName: recipientAccount.name,
           amount,
           price,
           chain: blockchain.chain

@@ -6,7 +6,7 @@ class Wallet {
   constructor() {
     this.balance = STARTING_BALANCE;
 
-    this.name = '';
+    //this.name = '';
 
     this.keyPair = ec.genKeyPair();
 
@@ -19,7 +19,7 @@ class Wallet {
 
   
 
-  createTransaction({ recipient, amount, price, chain }) {
+  createTransaction({ recipient, senderName, recipientName, amount, price, chain }) {
     if (chain) {
       this.balance = Wallet.calculateBalance({
         chain,
@@ -31,7 +31,7 @@ class Wallet {
       throw new Error('Amount exceeds balance');
     }
 
-    return new Transaction({ senderWallet: this, recipient, amount, price });
+    return new Transaction({ senderWallet: this, senderName, recipient, recipientName, amount, price });
   }
 
   static calculateBalance({ chain, address }) {

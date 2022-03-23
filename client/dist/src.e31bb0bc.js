@@ -46597,10 +46597,10 @@ var Transaction = function Transaction(_ref) {
   var recipients = Object.keys(outputMap);
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "Transaction"
-  }, /*#__PURE__*/_react.default.createElement("div", null, "From: ", "".concat(input.address.substring(0, 20), "..."), " | Balance: ", input.amount), recipients.map(function (recipient) {
+  }, /*#__PURE__*/_react.default.createElement("div", null, "From: ", "".concat(input.senderName, " || ").concat(input.address.substring(0, 20), "..."), " | Balance: ", input.amount), recipients.map(function (recipient) {
     return detail[recipient] ? /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
-    }, "To: ", "".concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " liter"), " | Price: ", "".concat(detail[recipient], " /liter")) : /*#__PURE__*/_react.default.createElement("div", {
+    }, "To: ", "".concat(input.recipientName, " || ").concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " liter"), " | Price: ", "".concat(detail[recipient], " /liter")) : /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
     });
   }));
@@ -47864,7 +47864,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52347" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58320" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
