@@ -67,18 +67,25 @@ app.post('/api/transact', (req, res) => {
   let transaction = transactionPool
     .existingTransaction({ inputAddress: wallet.publicKey });
 
+  let existAccount = walletPool.existingAccount({inputAddress: recipient});
+
+
   try {
-    if (transaction) {
-      transaction.update({ senderWallet: wallet, recipient, amount, price});
+    if(existAccount){
+      if (transaction) {
+        transaction.update({ senderWallet: wallet, recipient, amount, price});
+      } else {
+        transaction = wallet.createTransaction({
+          recipient,
+          amount,
+          price,
+          chain: blockchain.chain
+        });
+      }
     } else {
-      transaction = wallet.createTransaction({
-        recipient,
-        amount,
-        price,
-        chain: blockchain.chain
-      });
+      throw new Error('Recipient does not exist');
     }
-  } catch(error) {
+    } catch(error) {
     return res.status(400).json({ type: 'error', message: error.message });
   }
 
