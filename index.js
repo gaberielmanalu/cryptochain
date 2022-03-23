@@ -5,6 +5,8 @@ const path = require('path');
 const Blockchain = require('./blockchain');
 const PubSub = require('./app/pubsub');
 const TransactionPool = require('./wallet/transaction-pool');
+const WalletPool = require('./wallet/wallet-pool');
+const Account = require('./wallet/account');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner');
 
@@ -14,8 +16,10 @@ const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
+const account = new Account();
 const wallet = new Wallet();
-const pubsub = new PubSub({ blockchain, transactionPool, wallet});
+const walletPool = new WalletPool();
+const pubsub = new PubSub({ blockchain, transactionPool, wallet, walletPool});
 const transactionMiner = new TransactionMiner({
     blockchain, transactionPool, wallet, pubsub
 });
@@ -89,6 +93,11 @@ app.get('/api/transaction-pool-map', (req, res) => {
   res.json(transactionPool.transactionMap);
 });
 
+app.get('/api/get-contact', (req, res) => {
+  res.json(walletPool.walletMap);
+});
+
+
 app.get('/api/mine-transactions', (req, res) => {
   transactionMiner.mineTransactions();
 
@@ -125,6 +134,17 @@ app.get('/api/known-addresses', (req, res) => {
   res.json(Object.keys(addressMap));
 });
 
+app.post('/api/add-name',(req,res)=>{
+  const { name } = req.body;
+  account.addAttribute(name, wallet.publicKey);
+
+  walletPool.setWallet(account);
+
+  pubsub.broadcastAccount(account);
+
+  res.json({ type: 'success' }); 
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist/index.html'));
 });
@@ -145,6 +165,15 @@ const syncWithRootState = () => {
 
       console.log('replace transaction pool map on a sync with', rootTransactionPoolMap);
       transactionPool.setMap(rootTransactionPoolMap);
+    }
+  });
+
+  request({ url: `${ROOT_NODE_ADDRESS}/api/get-contact` }, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      const rootWalletPoolMap = JSON.parse(body);
+
+      console.log('replace transaction pool map on a sync with', rootWalletPoolMap);
+      walletPool.setMap(rootWalletPoolMap);
     }
   });
 };

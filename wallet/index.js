@@ -6,6 +6,8 @@ class Wallet {
   constructor() {
     this.balance = STARTING_BALANCE;
 
+    this.name = '';
+
     this.keyPair = ec.genKeyPair();
 
     this.publicKey = this.keyPair.getPublic().encode('hex');
@@ -14,6 +16,8 @@ class Wallet {
   sign(data) {
     return this.keyPair.sign(cryptoHash(data))
   }
+
+  
 
   createTransaction({ recipient, amount, price, chain }) {
     if (chain) {

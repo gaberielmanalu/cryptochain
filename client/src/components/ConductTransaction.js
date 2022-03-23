@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, Button } from 'react-bootstrap';
+import Account from './Account';
 import { Link } from 'react-router-dom';
 import history from '../history';
+
+const POLL_INERVAL_MS = 1000;
 
 class ConductTransaction extends Component {
   state = { recipient: '', amount: 0, price: 0,  knownAddresses: [] };
 
-  componentDidMount() {
-    fetch(`${document.location.origin}/api/known-addresses`)
+  fetchAccountPoolMap = () => {
+  fetch(`${document.location.origin}/api/get-contact`)
       .then(response => response.json())
-      .then(json => this.setState({ knownAddresses: json }));
+      .then(json => this.setState({ knownAddresses: json }));7
+  }
+ 
+  componentDidMount() {
+    this.fetchAccountPoolMap();
+
+    this.fetchPoolMapInterval = setInterval(
+      () => this.fetchAccountPoolMap(),
+      POLL_INERVAL_MS
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.fetchPoolMapInterval);
   }
 
   updateRecipient = event => {
@@ -41,20 +57,21 @@ class ConductTransaction extends Component {
   render() {
     return (
       <div className='ConductTransaction'>
-        <Link to='/'>Home</Link>
+        <Link to='/home'>Home</Link>
         <h3>Conduct a Transaction</h3>
         <br />
         <h4>Known Addresses</h4>
         {
-          this.state.knownAddresses.map(knownAddress => {
+          Object.values(this.state.knownAddresses).map(account => {
             return (
-              <div key={knownAddress}>
-                <div>{knownAddress}</div>
-                <br />
+              <div key={account.id}>
+                <hr />
+                <Account account={account} />
               </div>
-            );
+            )
           })
         }
+        <hr />
         <br />
         <FormGroup>
           <FormControl

@@ -36,7 +36,7 @@ class Production extends Component {
   render() {
     return (
       <div className='Production'>
-        <Link to='/'>Home</Link>
+        <Link to='/home'>Home</Link>
         <h3>Produksi Padi</h3>
         <br />
         <h4>Known Addresses</h4>
