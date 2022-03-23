@@ -24,6 +24,7 @@ const transactionMiner = new TransactionMiner({
     blockchain, transactionPool, wallet, pubsub
 });
 
+let listTransaction = {};
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/dist')));
@@ -100,6 +101,16 @@ app.get('/api/transaction-pool-map', (req, res) => {
   res.json(transactionPool.transactionMap);
 });
 
+app.get('/api/get-result', (req, res) => {
+  res.json(listTransaction);
+});
+
+app.get('/api/clear-list-search', (req, res) => {
+
+  listTransaction = {};
+  res.json({type: 'success'});
+});
+
 app.get('/api/get-contact', (req, res) => {
   res.json(walletPool.walletMap);
 });
@@ -139,6 +150,20 @@ app.get('/api/known-addresses', (req, res) => {
   }
 
   res.json(Object.keys(addressMap));
+});
+
+app.post('/api/search', (req, res) => {
+  const {address} = req.body;
+
+  for (let block of blockchain.chain) {
+    for (let transaction of block.data) {
+      if(transaction.input.address == address){
+        listTransaction[transaction.id] = transaction;
+      }
+    }
+  }
+  
+  res.json({ type: 'success' }); 
 });
 
 app.post('/api/add-name',(req,res)=>{

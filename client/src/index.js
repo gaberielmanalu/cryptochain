@@ -9,6 +9,8 @@ import Login from './components/Login';
 import TransactionPool from './components/TransactionPool';
 import Production from './components/Production';
 import './index.css';
+import Search from './components/Search';
+import SearchResult from './components/SearchResult';
 
 render(
   <Router history={history}>
@@ -19,6 +21,8 @@ render(
       <Route path='/conduct-transaction' component={ConductTransaction} />
       <Route path='/transaction-pool' component={TransactionPool} />
       <Route path='/production' component={Production} />
+      <Route path='/search' component={Search} />
+      <Route path='/search-result' component={SearchResult} />
     </Switch>
   </Router>,
   document.getElementById('root')
