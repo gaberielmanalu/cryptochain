@@ -11,6 +11,8 @@ import Production from './components/Production';
 import './index.css';
 import Search from './components/Search';
 import SearchResult from './components/SearchResult';
+import SearchBrand from './components/SearchBrand';
+import SearchResultBrand from './components/SearchResultBrand';
 
 render(
   <Router history={history}>
@@ -22,7 +24,9 @@ render(
       <Route path='/transaction-pool' component={TransactionPool} />
       <Route path='/production' component={Production} />
       <Route path='/search' component={Search} />
+      <Route path='/search-by-brand' component={SearchBrand} />
       <Route path='/search-result' component={SearchResult} />
+      <Route path='/search-result-brand' component={SearchResultBrand} />
     </Switch>
   </Router>,
   document.getElementById('root')

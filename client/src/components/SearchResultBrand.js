@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import Transaction from './Transaction';
+import { Link } from 'react-router-dom';
 import history from '../history';
 
 
-class SearchResult extends Component {
-  state = { transactionPoolMap: {}, searchInfo: {} };
+class SearchResultBrand extends Component {
+  state = { transactionPoolMap: {}};
 
   clearList = () => {
     fetch(`${document.location.origin}/api/clear-list-search`)
@@ -21,10 +22,6 @@ class SearchResult extends Component {
 
 
   componentDidMount() {
-    fetch(`${document.location.origin}/api/get-searched-info`)
-      .then(response => response.json())
-      .then(json => this.setState({ searchInfo: json }));
-
     fetch(`${document.location.origin}/api/get-result`)
       .then(response => response.json())
       .then(json => this.setState({ transactionPoolMap: json }));
@@ -34,17 +31,9 @@ class SearchResult extends Component {
 
     
   render() {
-    const  { searchedAddress , searchedBalance, searchedName} = this.state.searchInfo;
-
     return (
-      <div className='SearchResult'>
+      <div className='SearchResultBrand'>
         <h3>Result</h3>
-          <div className='searchInfo'>
-          <div>Name: {searchedName}</div>
-          <div>Address: {searchedAddress}</div>
-          <div>Balance: {searchedBalance}</div>
-        </div>
-        <br/>
         {
           Object.values(this.state.transactionPoolMap).map(transaction => {
             return (
@@ -67,4 +56,4 @@ class SearchResult extends Component {
   }
 }
 
-export default SearchResult;
+export default SearchResultBrand;

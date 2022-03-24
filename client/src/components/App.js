@@ -27,6 +27,7 @@ class App extends Component {
         <div><Link to='/production'>Produksi Padi</Link></div>
         <div><Link to='/transaction-pool'>Transaction Pool</Link></div>
         <div><Link to='/search'>Search</Link></div>
+        <div><Link to='/search-by-brand'>Search by Brand</Link></div>
         <br />
         <div className='WalletInfo'>
           <div>Address: {address}</div>

@@ -119,9 +119,9 @@ app.get('/api/get-result', (req, res) => {
 app.get('/api/clear-list-search', (req, res) => {
 
   listTransaction = {};
-  searchedAddress = {};
-  searchedBalance = {};
-  searchedName = {};
+  searchedAddress = '';
+  searchedBalance = '';
+  searchedName = '';
   res.json({type: 'success'});
 });
 
@@ -174,15 +174,31 @@ app.post('/api/search', (req, res) => {
   searchedName = walletPool.existingAccount({inputAddress: address}).name;
 
 
-  for (let block of blockchain.chain) {
-    for (let transaction of block.data) {
-      if(transaction.input.address == address){
-        listTransaction[transaction.id] = transaction;
+        for (let block of blockchain.chain) {
+          for (let transaction of block.data) {
+            if(transaction.input.address == address){
+              listTransaction[transaction.id] = transaction;
+            }
+          }
+        }
+
+  res.json({ type: 'success' }); 
+});
+
+app.post('/api/search-by-brand', (req, res) => {
+  const {brand} = req.body;
+
+    for (let block of blockchain.chain) {
+      for (let transaction of block.data) {
+        for(const key in transaction.detail){
+          if(transaction.detail[key].brand == brand){
+            listTransaction[transaction.id] = transaction;
+          }
+        }    
       }
     }
-  }
   
-  res.json({ type: 'success' }); 
+    res.json({ type: 'success' }); 
 });
 
 app.get('/api/get-searched-info', (req, res) =>{
