@@ -47722,7 +47722,8 @@ var SearchResult = /*#__PURE__*/function (_Component) {
     _this = _super.call.apply(_super, [this].concat(args));
 
     _defineProperty(_assertThisInitialized(_this), "state", {
-      transactionPoolMap: {}
+      transactionPoolMap: {},
+      searchInfo: {}
     });
 
     _defineProperty(_assertThisInitialized(_this), "clearList", function () {
@@ -47745,6 +47746,13 @@ var SearchResult = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      fetch("".concat(document.location.origin, "/api/get-searched-info")).then(function (response) {
+        return response.json();
+      }).then(function (json) {
+        return _this2.setState({
+          searchInfo: json
+        });
+      });
       fetch("".concat(document.location.origin, "/api/get-result")).then(function (response) {
         return response.json();
       }).then(function (json) {
@@ -47756,9 +47764,15 @@ var SearchResult = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this$state$searchInf = this.state.searchInfo,
+          searchedAddress = _this$state$searchInf.searchedAddress,
+          searchedBalance = _this$state$searchInf.searchedBalance,
+          searchedName = _this$state$searchInf.searchedName;
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "SearchResult"
-      }, /*#__PURE__*/_react.default.createElement("h3", null, "Transaction Pool"), Object.values(this.state.transactionPoolMap).map(function (transaction) {
+      }, /*#__PURE__*/_react.default.createElement("h3", null, "Result"), /*#__PURE__*/_react.default.createElement("div", {
+        className: "searchInfo"
+      }, /*#__PURE__*/_react.default.createElement("div", null, "Name: ", searchedName), /*#__PURE__*/_react.default.createElement("div", null, "Address: ", searchedAddress), /*#__PURE__*/_react.default.createElement("div", null, "Balance: ", searchedBalance)), Object.values(this.state.transactionPoolMap).map(function (transaction) {
         return /*#__PURE__*/_react.default.createElement("div", {
           key: transaction.id
         }, /*#__PURE__*/_react.default.createElement("hr", null), /*#__PURE__*/_react.default.createElement(_Transaction.default, {

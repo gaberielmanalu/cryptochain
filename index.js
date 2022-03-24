@@ -25,6 +25,9 @@ const transactionMiner = new TransactionMiner({
 });
 
 let listTransaction = {};
+let searchedAddress = {};
+let searchedBalance = {};
+let searchedName = {};
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/dist')));
@@ -113,6 +116,9 @@ app.get('/api/get-result', (req, res) => {
 app.get('/api/clear-list-search', (req, res) => {
 
   listTransaction = {};
+  searchedAddress = {};
+  searchedBalance = {};
+  searchedName = {};
   res.json({type: 'success'});
 });
 
@@ -160,6 +166,11 @@ app.get('/api/known-addresses', (req, res) => {
 app.post('/api/search', (req, res) => {
   const {address} = req.body;
 
+  searchedAddress = address;
+  searchedBalance = Wallet.calculateBalance({ chain: blockchain.chain, address });
+  searchedName = walletPool.existingAccount({inputAddress: address}).name;
+
+
   for (let block of blockchain.chain) {
     for (let transaction of block.data) {
       if(transaction.input.address == address){
@@ -169,6 +180,14 @@ app.post('/api/search', (req, res) => {
   }
   
   res.json({ type: 'success' }); 
+});
+
+app.get('/api/get-searched-info', (req, res) =>{
+  res.json({
+    searchedAddress,
+    searchedBalance, 
+    searchedName
+  });
 });
 
 app.post('/api/add-name',(req,res)=>{

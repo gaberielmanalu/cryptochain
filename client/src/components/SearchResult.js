@@ -6,7 +6,7 @@ import history from '../history';
 
 
 class SearchResult extends Component {
-  state = { transactionPoolMap: {} };
+  state = { transactionPoolMap: {}, searchInfo: {} };
 
   clearList = () => {
     fetch(`${document.location.origin}/api/clear-list-search`)
@@ -22,16 +22,29 @@ class SearchResult extends Component {
 
 
   componentDidMount() {
+    fetch(`${document.location.origin}/api/get-searched-info`)
+      .then(response => response.json())
+      .then(json => this.setState({ searchInfo: json }));
+
     fetch(`${document.location.origin}/api/get-result`)
       .then(response => response.json())
       .then(json => this.setState({ transactionPoolMap: json }));
+    
+    
   }
 
     
   render() {
+    const { searchedAddress , searchedBalance, searchedName} = this.state.searchInfo;
+
     return (
       <div className='SearchResult'>
-        <h3>Transaction Pool</h3>
+        <h3>Result</h3>
+        <div className='searchInfo'>
+          <div>Name: {searchedName}</div>
+          <div>Address: {searchedAddress}</div>
+          <div>Balance: {searchedBalance}</div>
+        </div>
         {
           Object.values(this.state.transactionPoolMap).map(transaction => {
             return (
