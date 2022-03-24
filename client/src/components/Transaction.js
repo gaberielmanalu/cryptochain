@@ -11,7 +11,7 @@ const Transaction = ({ transaction }) => {
           recipients.map(recipient => (
             detail[recipient] ? (
               <div key={recipient}>
-                To: {`${input.recipientName} || ${recipient.substring(0, 20)}...`} | Sent: {`${outputMap[recipient]} liter`} | Price: {`${detail[recipient]} /liter`}
+                To: {`${input.recipientName} || ${recipient.substring(0, 20)}...`} | Sent: {`${outputMap[recipient]} liter`} | Brand: {detail[recipient].brand} |Price: {`${detail[recipient].price} /liter`}
               </div>
             ) : (
             <div key={recipient}>

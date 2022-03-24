@@ -19,7 +19,7 @@ class Wallet {
 
   
 
-  createTransaction({ recipient, senderName, recipientName, amount, price, chain }) {
+  createTransaction({ recipient, senderName, recipientName, amount, price, brand, chain }) {
     if (chain) {
       this.balance = Wallet.calculateBalance({
         chain,
@@ -31,7 +31,7 @@ class Wallet {
       throw new Error('Amount exceeds balance');
     }
 
-    return new Transaction({ senderWallet: this, senderName, recipient, recipientName, amount, price });
+    return new Transaction({ senderWallet: this, senderName, recipient, recipientName, amount, price,brand });
   }
 
   static calculateBalance({ chain, address }) {

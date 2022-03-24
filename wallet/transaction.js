@@ -3,9 +3,9 @@ const { verifySignature } = require('../util');
 const { REWARD_INPUT, MINING_REWARD } = require('../config');
 
 class Transaction {
-  constructor({ senderWallet, senderName, recipient, recipientName, amount, outputMap, input, detail, price }) {
+  constructor({ senderWallet, senderName, recipient, recipientName, amount, outputMap, input, detail, price, brand }) {
     this.id = uuid();
-    this.detail = detail || this.createDetail({recipient, price});
+    this.detail = detail || this.createDetail({recipient, price, brand});
     this.outputMap = outputMap || this.createOutputMap({ senderWallet, recipient, amount });
     this.input = input || this.createInput({ senderWallet, senderName, recipientName, outputMap: this.outputMap });
   }
@@ -30,10 +30,10 @@ class Transaction {
     };
   }
 
-  createDetail({ recipient, price }){
+  createDetail({ recipient, price, brand }){
     const detail = {};
 
-      detail[recipient] = price;
+      detail[recipient] = {price, brand};
 
       return detail;
 

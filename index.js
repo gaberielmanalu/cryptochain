@@ -66,7 +66,7 @@ app.post('/api/mine', (req, res) => {
 });
 
 app.post('/api/transact', (req, res) => {
-  const { amount, recipient, price } = req.body;
+  const { amount, recipient, price, brand } = req.body;
 
   let transaction = transactionPool
     .existingTransaction({ inputAddress: wallet.publicKey });
@@ -78,18 +78,21 @@ app.post('/api/transact', (req, res) => {
 
   try {
     if(recipientAccount){
-      if (transaction) {
-        transaction.update({ 
-          senderWallet: wallet, senderName: senderAccount.name , recipient, recipientName: recipientAccount.name, amount, price});
-      } else {
+      if (!transaction) {
         transaction = wallet.createTransaction({
           recipient,
           senderName: senderAccount.name,
           recipientName: recipientAccount.name,
           amount,
           price,
+          brand,
           chain: blockchain.chain
         });
+        
+        /*transaction.update({ 
+          senderWallet: wallet, senderName: senderAccount.name , recipient, recipientName: recipientAccount.name, amount, price}); */
+      } else {
+        throw new Error('Lakukan Mining terlebih dahulu');
       }
     } else {
       throw new Error('Recipient does not exist');

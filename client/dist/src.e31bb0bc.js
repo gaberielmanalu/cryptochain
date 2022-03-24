@@ -46600,7 +46600,7 @@ var Transaction = function Transaction(_ref) {
   }, /*#__PURE__*/_react.default.createElement("div", null, "From: ", "".concat(input.senderName, " || ").concat(input.address.substring(0, 20), "..."), " | Balance: ", input.amount), recipients.map(function (recipient) {
     return detail[recipient] ? /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
-    }, "To: ", "".concat(input.recipientName, " || ").concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " liter"), " | Price: ", "".concat(detail[recipient], " /liter")) : /*#__PURE__*/_react.default.createElement("div", {
+    }, "To: ", "".concat(input.recipientName, " || ").concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " liter"), " | Brand: ", detail[recipient].brand, " |Price: ", "".concat(detail[recipient].price, " /liter")) : /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
     });
   }));
@@ -46960,6 +46960,7 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
       recipient: '',
       amount: 0,
       price: 0,
+      brand: '',
       knownAddresses: []
     });
 
@@ -46980,6 +46981,12 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_this), "updateBrand", function (event) {
+      _this.setState({
+        brand: event.target.value
+      });
+    });
+
     _defineProperty(_assertThisInitialized(_this), "updateAmount", function (event) {
       _this.setState({
         amount: Number(event.target.value)
@@ -46996,7 +47003,8 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
       var _this$state = _this.state,
           recipient = _this$state.recipient,
           amount = _this$state.amount,
-          price = _this$state.price;
+          price = _this$state.price,
+          brand = _this$state.brand;
       fetch("".concat(document.location.origin, "/api/transact"), {
         method: 'POST',
         headers: {
@@ -47005,7 +47013,8 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
         body: JSON.stringify({
           recipient: recipient,
           amount: amount,
-          price: price
+          price: price,
+          brand: brand
         })
       }).then(function (response) {
         return response.json();
@@ -47057,6 +47066,11 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
         placeholder: "amount",
         value: this.state.amount,
         onChange: this.updateAmount
+      })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+        input: "text",
+        placeholder: "brand",
+        value: this.state.brand,
+        onChange: this.updateBrand
       })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
         input: "number",
         placeholder: "price",
@@ -47878,7 +47892,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58320" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53827" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

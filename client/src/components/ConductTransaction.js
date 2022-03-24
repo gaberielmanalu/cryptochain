@@ -7,7 +7,7 @@ import history from '../history';
 const POLL_INERVAL_MS = 1000;
 
 class ConductTransaction extends Component {
-  state = { recipient: '', amount: 0, price: 0,  knownAddresses: [] };
+  state = { recipient: '', amount: 0, price: 0, brand: '',  knownAddresses: [] };
 
   fetchAccountPoolMap = () => {
   fetch(`${document.location.origin}/api/get-contact`)
@@ -32,6 +32,10 @@ class ConductTransaction extends Component {
     this.setState({ recipient: event.target.value });
   }
 
+  updateBrand = event => {
+    this.setState({ brand: event.target.value });
+  }
+
   updateAmount = event => {
     this.setState({ amount: Number(event.target.value) });
   }
@@ -41,12 +45,12 @@ class ConductTransaction extends Component {
   }
 
   conductTransaction = () => {
-    const { recipient, amount, price } = this.state;
+    const { recipient, amount, price , brand} = this.state;
 
     fetch(`${document.location.origin}/api/transact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipient, amount, price })
+      body: JSON.stringify({ recipient, amount, price, brand })
     }).then(response => response.json())
       .then(json => {
         alert(json.message || json.type);
@@ -87,6 +91,14 @@ class ConductTransaction extends Component {
             placeholder='amount'
             value={this.state.amount}
             onChange={this.updateAmount}
+          />
+        </FormGroup>
+        <FormGroup>
+          <FormControl
+            input='text'
+            placeholder='brand'
+            value={this.state.brand}
+            onChange={this.updateBrand}
           />
         </FormGroup>
         <FormGroup>
