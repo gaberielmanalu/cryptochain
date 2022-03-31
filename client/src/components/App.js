@@ -16,22 +16,24 @@ class App extends Component {
 
     return (
       <div className='App'>
+      <div className='Pinggir'>Halo, Admin BULOG 1</div>
+      <br/>
         <img className='logo' src={logo}></img>
         <br />
         <div>
-          Welcome to the blockchain...
+          Selamat Datang pada Jaringan Blockchain Rantai Pasok Beras
         </div>
         <br />
         <div><Link to='/blocks'>Blocks</Link></div>
         <div><Link to='/conduct-transaction'>Jual Beli</Link></div>
-        <div><Link to='/production'>Produksi Padi</Link></div>
-        <div><Link to='/transaction-pool'>Transaction Pool</Link></div>
-        <div><Link to='/search'>Search</Link></div>
-        <div><Link to='/search-by-brand'>Search by Brand</Link></div>
+        <div><Link to='/production'>Lapor Produksi Beras</Link></div>
+        <div><Link to='/transaction-pool'>Daftar Transaksi</Link></div>
+        <div><Link to='/search'>Pencarian Instansi</Link></div>
+        <div><Link to='/search-by-brand'>Pencarian Merk</Link></div>
         <br />
         <div className='WalletInfo'>
           <div>Address: {address}</div>
-          <div>Balance: {balance}</div>
+          <div>Jumlah Beras: {balance} Kg</div>
         </div>
       </div>
     );

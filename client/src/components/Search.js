@@ -28,7 +28,7 @@ class Search extends Component {
     return (
       <div className='Search'>
         <Link to='/home'>Home</Link>
-        <h3>Conduct a Transaction</h3>
+        <h3>Cari Riwayat Instance: </h3>
         <br/>
         <FormGroup>
           <FormControl

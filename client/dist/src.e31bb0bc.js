@@ -28652,24 +28652,26 @@ var App = /*#__PURE__*/function (_Component) {
           balance = _this$state$walletInf.balance;
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "App"
-      }, /*#__PURE__*/_react.default.createElement("img", {
+      }, /*#__PURE__*/_react.default.createElement("div", {
+        className: "Pinggir"
+      }, "Halo, Admin BULOG 1"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("img", {
         className: "logo",
         src: _logo.default
-      }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", null, "Welcome to the blockchain..."), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", null, "Selamat Datang pada Jaringan Blockchain Rantai Pasok Beras"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/blocks"
       }, "Blocks")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/conduct-transaction"
       }, "Jual Beli")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/production"
-      }, "Produksi Padi")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }, "Lapor Produksi Beras")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/transaction-pool"
-      }, "Transaction Pool")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }, "Daftar Transaksi")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/search"
-      }, "Search")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+      }, "Pencarian Instansi")), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/search-by-brand"
-      }, "Search by Brand")), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", {
+      }, "Pencarian Merk")), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", {
         className: "WalletInfo"
-      }, /*#__PURE__*/_react.default.createElement("div", null, "Address: ", address), /*#__PURE__*/_react.default.createElement("div", null, "Balance: ", balance)));
+      }, /*#__PURE__*/_react.default.createElement("div", null, "Address: ", address), /*#__PURE__*/_react.default.createElement("div", null, "Jumlah Beras: ", balance, " Kg")));
     }
   }]);
 
@@ -46602,7 +46604,7 @@ var Transaction = function Transaction(_ref) {
   }, /*#__PURE__*/_react.default.createElement("div", null, "From: ", "".concat(input.senderName, " || ").concat(input.address.substring(0, 20), "..."), " | Balance: ", input.amount), recipients.map(function (recipient) {
     return detail[recipient] ? /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
-    }, "To: ", "".concat(input.recipientName, " || ").concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " liter"), " | Brand: ", detail[recipient].brand, " |Price: ", "".concat(detail[recipient].price, " /liter")) : /*#__PURE__*/_react.default.createElement("div", {
+    }, "To: ", "".concat(input.recipientName, " || ").concat(recipient.substring(0, 20), "..."), " | Sent: ", "".concat(outputMap[recipient], " Kg"), /*#__PURE__*/_react.default.createElement("br", null), "Brand: ", detail[recipient].brand, " || Price: ", "".concat(detail[recipient].price, " /Kg")) : /*#__PURE__*/_react.default.createElement("div", {
       key: recipient
     });
   }));
@@ -47192,7 +47194,7 @@ var Login = /*#__PURE__*/function (_Component) {
         className: "Login"
       }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/home"
-      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Conduct a Transaction"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Masukkan nama Instansi:"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
         input: "text",
         placeholder: "name",
         value: this.state.name,
@@ -47460,11 +47462,7 @@ var Production = /*#__PURE__*/function (_Component) {
         className: "Production"
       }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/home"
-      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Produksi Padi"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("h4", null, "Known Addresses"), this.state.knownAddresses.map(function (knownAddress) {
-        return /*#__PURE__*/_react.default.createElement("div", {
-          key: knownAddress
-        }, /*#__PURE__*/_react.default.createElement("div", null, knownAddress), /*#__PURE__*/_react.default.createElement("br", null));
-      }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Lapor Produksi Beras"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
         input: "number",
         placeholder: "amount",
         value: this.state.amount,
@@ -47655,7 +47653,7 @@ var Search = /*#__PURE__*/function (_Component) {
         className: "Search"
       }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/home"
-      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Conduct a Transaction"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Cari Riwayat Instance: "), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
         input: "text",
         placeholder: "address",
         value: this.state.address,
@@ -47905,7 +47903,7 @@ var SearchBrand = /*#__PURE__*/function (_Component) {
         className: "SearchBrand"
       }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/home"
-      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Conduct a Transaction"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Cari Peredaran Merek:"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
         input: "text",
         placeholder: "brand",
         value: this.state.brand,
@@ -48140,7 +48138,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53827" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54987" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -28,7 +28,7 @@ class Login extends Component {
     return (
       <div className='Login'>
         <Link to='/home'>Home</Link>
-        <h3>Conduct a Transaction</h3>
+        <h3>Masukkan nama Instansi:</h3>
         <br/>
         <FormGroup>
           <FormControl

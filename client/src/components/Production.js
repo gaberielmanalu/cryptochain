@@ -37,19 +37,7 @@ class Production extends Component {
     return (
       <div className='Production'>
         <Link to='/home'>Home</Link>
-        <h3>Produksi Padi</h3>
-        <br />
-        <h4>Known Addresses</h4>
-        {
-          this.state.knownAddresses.map(knownAddress => {
-            return (
-              <div key={knownAddress}>
-                <div>{knownAddress}</div>
-                <br />
-              </div>
-            );
-          })
-        }
+        <h3>Lapor Produksi Beras</h3>
         <br />
         <FormGroup>
           <FormControl

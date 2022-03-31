@@ -28,7 +28,7 @@ class SearchBrand extends Component {
     return (
       <div className='SearchBrand'>
         <Link to='/home'>Home</Link>
-        <h3>Conduct a Transaction</h3>
+        <h3>Cari Peredaran Merek:</h3>
         <br/>
         <FormGroup>
           <FormControl

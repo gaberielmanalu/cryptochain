@@ -20,7 +20,8 @@ body {
     align-items: center;
 }
 
-.WalletInfo {
+
+.WalletInfo, .SearchInfo {
     width: 500px;
 }
 
@@ -36,7 +37,7 @@ body {
 
 }
 
-.ConductTransaction, .TransactionPool{
+.ConductTransaction, .TransactionPool, .Login , .Production, .Search, .SearchBrand, .SearchResult, .SearchResultBrand{
     margin: 10%;
 }
 a, a:hover {

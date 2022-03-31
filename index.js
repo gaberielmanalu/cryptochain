@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const request = require('request');
 const path = require('path');
+const mysql = require('mysql');
 const Blockchain = require('./blockchain');
 const PubSub = require('./app/pubsub');
 const TransactionPool = require('./wallet/transaction-pool');
@@ -9,6 +10,21 @@ const WalletPool = require('./wallet/wallet-pool');
 const Account = require('./wallet/account');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner');
+
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'rantaipasok'
+});
+
+db.connect((err) => {
+  if(err){
+    throw err;
+  }
+  console.log('MySQL Connected');
+});
+
 
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
@@ -105,6 +121,19 @@ app.post('/api/transact', (req, res) => {
 
   pubsub.broadcastTransaction(transaction);
 
+  let sql = 'TRUNCATE TABLE transactions';
+  let query = db.query(sql,(err, result) =>{
+    if(err) throw err; 
+  });
+
+  let transactionString = JSON.stringify(transaction);
+  let post = {transaction:`${transactionString}`};
+  sql = 'INSERT INTO transactions SET ?';
+  query = db.query(sql, post, (err, result) =>{
+    if(err) throw err; 
+  });
+
+
   res.json({ type: 'success', transaction });
 });
 
@@ -132,6 +161,12 @@ app.get('/api/get-contact', (req, res) => {
 
 app.get('/api/mine-transactions', (req, res) => {
   transactionMiner.mineTransactions();
+
+  let sql = 'TRUNCATE TABLE transactions';
+  let query = db.query(sql,(err, result) =>{
+    if(err) throw err; 
+  });
+  
 
   res.redirect('/api/blocks');
 });
