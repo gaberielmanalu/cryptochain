@@ -38,6 +38,8 @@
     "express-session": "^1.17.2",
     "hex-to-binary": "^1.0.1",
     "history": "^4.7.2",
+    "mongodb": "^4.4.1",
+    "mongoose": "^6.2.9",
     "mysql": "^2.18.1",
     "parcel-bundler": "^1.12.5",
     "pubnub": "^4.21.6",

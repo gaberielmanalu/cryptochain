@@ -8,13 +8,14 @@ class TransactionPool {
   clear() {
     this.transactionMap = {};
   }
+  
 
   setTransaction(transaction) {
     this.transactionMap[transaction.id] = transaction;
   }
 
   setMap(transactionMap) {
-    this.transactionMap = transactionMap;
+    this.transactionMap = transactionMap; 
   }
 
   existingTransaction({ inputAddress }) {
@@ -42,4 +43,4 @@ class TransactionPool {
   }
 }
 
-module.exports = TransactionPool;
+module.exports =  TransactionPool;

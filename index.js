@@ -2,28 +2,36 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const request = require('request');
 const path = require('path');
-const mysql = require('mysql');
+const mongoose =  require('mongoose');
+
 const Blockchain = require('./blockchain');
 const PubSub = require('./app/pubsub');
 const TransactionPool = require('./wallet/transaction-pool');
+const transactionPoolDB = require('./model/transactionPoolDB');
+const blockchainDB = require('./model/blockchainDB');
 const WalletPool = require('./wallet/wallet-pool');
 const Account = require('./wallet/account');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner');
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'rantaipasok'
-});
+/*
+  var someVar = [];
 
-db.connect((err) => {
-  if(err){
-    throw err;
-  }
-  console.log('MySQL Connected');
-});
+  db.query("select transaction as '' from transactions", function(err, rows){
+    if(err) {
+      throw err;
+    } else {
+      setValue(rows);
+    }
+  });
+
+  function setValue(value) {
+    textLength = value.length;
+    someVar = value;
+    //console.log(someVar);
+  } 
+
+*/
 
 
 const DEFAULT_PORT = 3000;
@@ -45,8 +53,47 @@ let searchedAddress = {};
 let searchedBalance = {};
 let searchedName = {};
 
+let PEER_PORT;
+
+if(process.env.GENERATE_PEER_PORT === 'true'){
+    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random()* 1000);
+}
+const PORT = PEER_PORT || DEFAULT_PORT;
+
+const dbURI = 'mongodb+srv://gabe:1234@blockchain.4sedk.mongodb.net/rantai-pasok?retryWrites=true&w=majority';
+mongoose.connect(dbURI)
+.then((result) => {
+  app.listen(PORT,() => { 
+    console.log(`listening at localhost: ${PORT}`);
+    
+    if(PORT !== DEFAULT_PORT){
+        syncWithRootState(); 
+    }    
+})  
+}).catch((err) => console.log(err));
+
+
+
+inject();
+async function inject(){
+  const transactionInject = await transactionPoolDB.findOne();
+  //console.log(transactionInject.Transaction.input.signature);
+  if(transactionInject !== null){
+    transactionPool.setTransaction(transactionInject.Transaction);
+
+  } 
+
+};
+
+
+
+
+
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/dist')));
+
+
 
 app.get('/api/blocks', (req, res) => {
   res.json(blockchain.chain);
@@ -107,7 +154,7 @@ app.post('/api/transact', (req, res) => {
         
         /*transaction.update({ 
           senderWallet: wallet, senderName: senderAccount.name , recipient, recipientName: recipientAccount.name, amount, price}); */
-      } else {
+      }else {
         throw new Error('Lakukan Mining terlebih dahulu');
       }
     } else {
@@ -121,23 +168,51 @@ app.post('/api/transact', (req, res) => {
 
   pubsub.broadcastTransaction(transaction);
 
-  let sql = 'TRUNCATE TABLE transactions';
-  let query = db.query(sql,(err, result) =>{
-    if(err) throw err; 
+  
+
+  /*
+   transactionPoolToDB.collection.deleteMany({}).then(function(){
+    console.log("Data deleted"); // Success
+    }).catch(function(error){
+    console.log(error); // Failure
+    });
+  */
+  const transactionPoolToDB = new transactionPoolDB({
+      Transaction: {
+        id: transaction.id,
+        detail: transaction.detail,
+        outputMap: transaction.outputMap,
+        input:{
+          timestamp: transaction.input.timestamp,
+          amount: transaction.input.amount,
+          address: transaction.input.address,
+          senderName: transaction.input.senderName,
+          signature: transaction.input.signature
+          
+        }
+      }
   });
 
-  let transactionString = JSON.stringify(transaction);
-  let post = {transaction:`${transactionString}`};
-  sql = 'INSERT INTO transactions SET ?';
-  query = db.query(sql, post, (err, result) =>{
-    if(err) throw err; 
-  });
+  transactionPoolToDB.save();
 
-
-  res.json({ type: 'success', transaction });
+    //res.redirect('/api/add-transaction-pool');
+    res.json({ type: 'success', transaction });
 });
 
+/*
+app.get('/api/add-transaction-pool', (req,res)=>{
+    
+  transactionPoolToDB.save().then((result) => res.send(result)).catch((err)=>console.log(err)); 
+
+
+}); 
+
+*/
+
+
+
 app.get('/api/transaction-pool-map', (req, res) => {
+
   res.json(transactionPool.transactionMap);
 });
 
@@ -162,11 +237,10 @@ app.get('/api/get-contact', (req, res) => {
 app.get('/api/mine-transactions', (req, res) => {
   transactionMiner.mineTransactions();
 
-  let sql = 'TRUNCATE TABLE transactions';
-  let query = db.query(sql,(err, result) =>{
-    if(err) throw err; 
-  });
-  
+  const  deleteTransaction = new transactionPoolDB;
+  deleteTransaction.collection.deleteMany({}).catch(function(error){
+    console.log(error); // Failure
+    });
 
   res.redirect('/api/blocks');
 });
@@ -290,44 +364,46 @@ const syncWithRootState = () => {
 
 /*
 
-const walletFoo = new Wallet();
-const walletBar = new Wallet();
+  const walletFoo = new Wallet();
+  const walletBar = new Wallet();
 
-const generateWalletTransaction = ({ wallet, recipient, amount }) => {
-    const transaction =  wallet.createTransaction({
-        recipient, amount, chain: blockchain.chain
-    });
+  const generateWalletTransaction = ({ wallet, recipient, amount }) => {
+      const transaction =  wallet.createTransaction({
+          recipient, amount, chain: blockchain.chain
+      });
 
-    transactionPool.setTransaction(transaction);
-};
+      transactionPool.setTransaction(transaction);
+  };
 
-const walletAction = () => generateWalletTransaction ({
-    wallet, recipient: walletFoo.publicKey,  amount:5
-});
+  const walletAction = () => generateWalletTransaction ({
+      wallet, recipient: walletFoo.publicKey,  amount:5
+  });
 
-const walletFooAction = () => generateWalletTransaction({
-    wallet: walletFoo, recipient: walletBar.publicKey, amount: 10
-});
+  const walletFooAction = () => generateWalletTransaction({
+      wallet: walletFoo, recipient: walletBar.publicKey, amount: 10
+  });
 
-const walletBarAction = () => generateWalletTransaction({
-    wallet: walletBar, recipient: wallet.publicKey, amount: 15
-});
- 
-for(let i = 0 ; i<5 ; i++){
-    if (i%3 === 0){
-        walletAction();
-        walletFooAction();
-    } else if (i%3 === 1) {
-        walletAction();
-        walletBarAction();
-    } else {
-        walletBarAction();
-        walletFooAction();
-    }
+  const walletBarAction = () => generateWalletTransaction({
+      wallet: walletBar, recipient: wallet.publicKey, amount: 15
+  });
+  
+  for(let i = 0 ; i<5 ; i++){
+      if (i%3 === 0){
+          walletAction();
+          walletFooAction();
+      } else if (i%3 === 1) {
+          walletAction();
+          walletBarAction();
+      } else {
+          walletBarAction();
+          walletFooAction();
+      }
 
-    transactionMiner.mineTransactions();
-}
+      transactionMiner.mineTransactions();
+  }
+
 */
+/*
 
 let PEER_PORT;
 
@@ -341,6 +417,7 @@ app.listen(PORT,() => {
     
     if(PORT !== DEFAULT_PORT){
         syncWithRootState(); 
-    }
-    
+    }    
 });  
+
+*/
