@@ -11,9 +11,10 @@ class TransactionMiner {
   mineTransactions() {
     const validTransactions = this.transactionPool.validTransactions();
 
-    validTransactions.push(
+    /*validTransactions.push(
       Transaction.rewardTransaction({ minerWallet: this.wallet})
     );
+    */
 
     this.blockchain.addBlock({ data: validTransactions });
 
@@ -22,11 +23,12 @@ class TransactionMiner {
     this.transactionPool.clear();
   }
 
-  mineProduction({amount}) {
-    const validTransactions = this.transactionPool.validTransactions();
+  mineProduction({amount, recipient}) {
+    const validTransactions= this.transactionPool.validTransactions();
+    //let validTransactions;
 
     validTransactions.push(
-      Transaction.inputProduction({ minerWallet: this.wallet, amount })
+      Transaction.inputProduction({recipient, amount })
     );
 
     this.blockchain.addBlock({ data: validTransactions });

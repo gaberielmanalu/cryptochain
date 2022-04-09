@@ -1,18 +1,38 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, Button } from 'react-bootstrap';
+import Account from './Account';
 import { Link } from 'react-router-dom';
 import history from '../history';
 
-class Production extends Component {
-  state = { amount: 0,  knownAddresses: [] };
+const POLL_INERVAL_MS = 1000;
 
+
+class Production extends Component {
+  state = { recipient: '' , amount: 0,  knownAddresses: [] };
+
+  fetchAccountPoolMap = () => {
+    fetch(`${document.location.origin}/api/get-contact`)
+        .then(response => response.json())
+        .then(json => this.setState({ knownAddresses: json }));
+    }
+  
+  
   componentDidMount() {
-    fetch(`${document.location.origin}/api/known-addresses`)
-      .then(response => response.json())
-      .then(json => this.setState({ knownAddresses: json }));
+    this.fetchAccountPoolMap();
+
+    this.fetchPoolMapInterval = setInterval(
+      () => this.fetchAccountPoolMap(),
+      POLL_INERVAL_MS
+    );
   }
 
+  componentWillUnmount() {
+    clearInterval(this.fetchPoolMapInterval);
+  }
 
+  updateRecipient = event => {
+    this.setState({ recipient: event.target.value });
+  }
 
   updateAmount = event => {
     this.setState({ amount: Number(event.target.value) });
@@ -20,12 +40,12 @@ class Production extends Component {
 
 
   conductTransaction = () => {
-    const { amount } = this.state;
+    const { amount, recipient } = this.state;
 
     fetch(`${document.location.origin}/api/production`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount })
+      body: JSON.stringify({ amount, recipient })
     }).then(response => response.json())
       .then(json => {
         alert(json.message || json.type);
@@ -39,6 +59,27 @@ class Production extends Component {
         <Link to='/home'>Home</Link>
         <h3>Lapor Produksi Beras</h3>
         <br />
+        <h4>Known Addresses</h4>
+        {
+          Object.values(this.state.knownAddresses).map(account => {
+            return (
+              <div key={account.id}>
+                <hr />
+                <Account account={account} />
+              </div>
+            )
+          })
+        }
+        <hr />
+        <br />
+        <FormGroup>
+          <FormControl
+            input='text'
+            placeholder='recipient'
+            value={this.state.recipient}
+            onChange={this.updateRecipient}
+          />
+        </FormGroup>
         <FormGroup>
           <FormControl
             input='number'

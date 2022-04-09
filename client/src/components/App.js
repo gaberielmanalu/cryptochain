@@ -12,11 +12,11 @@ class App extends Component {
   }
 
   render() {
-    const { address, balance } = this.state.walletInfo;
+    const { address, balance, name } = this.state.walletInfo;
 
     return (
       <div className='App'>
-      <div className='Pinggir'>Halo, Admin BULOG 1</div>
+      <div className='Pinggir'>Halo,{name}</div>
       <br/>
         <img className='logo' src={logo}></img>
         <br />

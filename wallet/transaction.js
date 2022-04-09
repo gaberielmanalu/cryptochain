@@ -92,10 +92,10 @@ class Transaction {
     });
   }
 
-  static inputProduction({ minerWallet, amount }) {
+  static inputProduction({ recipient, amount }) {
     return new this({
       input: REWARD_INPUT,
-      outputMap: { [minerWallet.publicKey]: amount }
+      outputMap: { [recipient]: amount }
     });
   }
 }

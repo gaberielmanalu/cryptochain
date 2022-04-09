@@ -28649,12 +28649,13 @@ var App = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this$state$walletInf = this.state.walletInfo,
           address = _this$state$walletInf.address,
-          balance = _this$state$walletInf.balance;
+          balance = _this$state$walletInf.balance,
+          name = _this$state$walletInf.name;
       return /*#__PURE__*/_react.default.createElement("div", {
         className: "App"
       }, /*#__PURE__*/_react.default.createElement("div", {
         className: "Pinggir"
-      }, "Halo, Admin BULOG 1"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("img", {
+      }, "Halo,", name), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("img", {
         className: "logo",
         src: _logo.default
       }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", null, "Selamat Datang pada Jaringan Blockchain Rantai Pasok Beras"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
@@ -46976,7 +46977,6 @@ var ConductTransaction = /*#__PURE__*/function (_Component) {
           knownAddresses: json
         });
       });
-      7;
     });
 
     _defineProperty(_assertThisInitialized(_this), "updateRecipient", function (event) {
@@ -47359,6 +47359,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactBootstrap = require("react-bootstrap");
 
+var _Account = _interopRequireDefault(require("./Account"));
+
 var _reactRouterDom = require("react-router-dom");
 
 var _history = _interopRequireDefault(require("../history"));
@@ -47393,6 +47395,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var POLL_INERVAL_MS = 1000;
+
 var Production = /*#__PURE__*/function (_Component) {
   _inherits(Production, _Component);
 
@@ -47410,8 +47414,25 @@ var Production = /*#__PURE__*/function (_Component) {
     _this = _super.call.apply(_super, [this].concat(args));
 
     _defineProperty(_assertThisInitialized(_this), "state", {
+      recipient: '',
       amount: 0,
       knownAddresses: []
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "fetchAccountPoolMap", function () {
+      fetch("".concat(document.location.origin, "/api/get-contact")).then(function (response) {
+        return response.json();
+      }).then(function (json) {
+        return _this.setState({
+          knownAddresses: json
+        });
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "updateRecipient", function (event) {
+      _this.setState({
+        recipient: event.target.value
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "updateAmount", function (event) {
@@ -47421,14 +47442,17 @@ var Production = /*#__PURE__*/function (_Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "conductTransaction", function () {
-      var amount = _this.state.amount;
+      var _this$state = _this.state,
+          amount = _this$state.amount,
+          recipient = _this$state.recipient;
       fetch("".concat(document.location.origin, "/api/production"), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          amount: amount
+          amount: amount,
+          recipient: recipient
         })
       }).then(function (response) {
         return response.json();
@@ -47447,13 +47471,15 @@ var Production = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch("".concat(document.location.origin, "/api/known-addresses")).then(function (response) {
-        return response.json();
-      }).then(function (json) {
-        return _this2.setState({
-          knownAddresses: json
-        });
-      });
+      this.fetchAccountPoolMap();
+      this.fetchPoolMapInterval = setInterval(function () {
+        return _this2.fetchAccountPoolMap();
+      }, POLL_INERVAL_MS);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearInterval(this.fetchPoolMapInterval);
     }
   }, {
     key: "render",
@@ -47462,7 +47488,18 @@ var Production = /*#__PURE__*/function (_Component) {
         className: "Production"
       }, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
         to: "/home"
-      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Lapor Produksi Beras"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+      }, "Home"), /*#__PURE__*/_react.default.createElement("h3", null, "Lapor Produksi Beras"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("h4", null, "Known Addresses"), Object.values(this.state.knownAddresses).map(function (account) {
+        return /*#__PURE__*/_react.default.createElement("div", {
+          key: account.id
+        }, /*#__PURE__*/_react.default.createElement("hr", null), /*#__PURE__*/_react.default.createElement(_Account.default, {
+          account: account
+        }));
+      }), /*#__PURE__*/_react.default.createElement("hr", null), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
+        input: "text",
+        placeholder: "recipient",
+        value: this.state.recipient,
+        onChange: this.updateRecipient
+      })), /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormGroup, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.FormControl, {
         input: "number",
         placeholder: "amount",
         value: this.state.amount,
@@ -47480,7 +47517,7 @@ var Production = /*#__PURE__*/function (_Component) {
 ;
 var _default = Production;
 exports.default = _default;
-},{"react":"../../node_modules/react/index.js","react-bootstrap":"../../node_modules/react-bootstrap/es/index.js","react-router-dom":"../../node_modules/react-router-dom/es/index.js","../history":"history.js"}],"../../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"react":"../../node_modules/react/index.js","react-bootstrap":"../../node_modules/react-bootstrap/es/index.js","./Account":"components/Account.js","react-router-dom":"../../node_modules/react-router-dom/es/index.js","../history":"history.js"}],"../../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -48138,7 +48175,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57377" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51760" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

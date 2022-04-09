@@ -12,7 +12,7 @@ class ConductTransaction extends Component {
   fetchAccountPoolMap = () => {
   fetch(`${document.location.origin}/api/get-contact`)
       .then(response => response.json())
-      .then(json => this.setState({ knownAddresses: json }));7
+      .then(json => this.setState({ knownAddresses: json }));
   }
  
   componentDidMount() {

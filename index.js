@@ -246,18 +246,20 @@ app.get('/api/mine-transactions', (req, res) => {
 });
 
 app.post('/api/production', (req, res) => {
-   const { amount } = req.body;
-  transactionMiner.mineProduction({amount});
+   const { amount, recipient } = req.body;
+  transactionMiner.mineProduction({amount, recipient});
 
   res.json({ type: 'success' }); 
 });
 
 app.get('/api/wallet-info', (req, res) => {
   const address = wallet.publicKey;
+  const name = account.name;
 
   res.json({
     address,
-    balance: Wallet.calculateBalance({ chain: blockchain.chain, address })
+    balance: Wallet.calculateBalance({ chain: blockchain.chain, address }),
+    name
   });
 });
 
