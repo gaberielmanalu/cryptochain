@@ -1,12 +1,13 @@
 const Block = require('./block');
 const Transaction = require('../wallet/transaction');
 const Wallet = require('../wallet');
+const blockchainDB = require('../model/blockchainDB');
 const { cryptoHash } = require('../util');
 const { REWARD_INPUT, MINING_REWARD } = require('../config');
 
 class Blockchain {
   constructor() {
-    this.chain = [Block.genesis()];
+    this.chain = [];
   }
 
   addBlock({ data }) {
@@ -14,6 +15,19 @@ class Blockchain {
       lastBlock: this.chain[this.chain.length-1],
       data
     });
+
+    const blockchainToDB = new blockchainDB({
+      Block: {
+        timestamp: newBlock.timestamp,
+        lastHash: newBlock.lastHash,
+        hash: newBlock.hash,
+        data: newBlock.data,
+        nonce: newBlock.nonce,
+        difficulty: newBlock.difficulty
+      }
+  });
+
+  blockchainToDB.save();
 
     this.chain.push(newBlock);
   }

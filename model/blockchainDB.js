@@ -2,7 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const blockchainSchema = new Schema({
-    blockchainDB: Schema.Types.Mixed
+    Block: {
+      timestamp: Number,
+      lastHash: String,
+      hash: String,
+      data: Object,
+      nonce: Number,
+      difficulty: Number
+    }
   });
   
 const blockchainDB = mongoose.model('block', blockchainSchema);

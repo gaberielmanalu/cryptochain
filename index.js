@@ -76,12 +76,19 @@ mongoose.connect(dbURI)
 
 inject();
 async function inject(){
-  const transactionInject = await transactionPoolDB.findOne();
+  const transactionInject = await transactionPoolDB.find();
   //console.log(transactionInject.Transaction.input.signature);
   if(transactionInject !== null){
-    transactionPool.setTransaction(transactionInject.Transaction);
+    for(Transaction of transactionInject){
+      transactionPool.setTransaction(Transaction.Transaction);
+    }
+  }
+  const blockchainInject = await blockchainDB.find();
+  //console.log(transactionInject.Transaction.input.signature);
+    for(Block of blockchainInject){
 
-  } 
+      blockchain.chain.push(Block.Block);
+    }
 
 };
 
@@ -241,6 +248,8 @@ app.get('/api/mine-transactions', (req, res) => {
   deleteTransaction.collection.deleteMany({}).catch(function(error){
     console.log(error); // Failure
     });
+  
+    
 
   res.redirect('/api/blocks');
 });
