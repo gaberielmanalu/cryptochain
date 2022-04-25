@@ -3,6 +3,8 @@ import { render } from 'react-dom';
 import { Router, Switch, Route } from 'react-router-dom';
 import history from './history';
 import App from './components/App';
+import Admin from './components/Admin';
+import loginAdmin from './components/LoginAdmin';
 import Blocks from './components/Blocks';
 import ConductTransaction from './components/ConductTransaction';
 import Login from './components/Login';
@@ -19,6 +21,8 @@ render(
     <Switch>
       <Route exact path='/' component={Login} />
       <Route exact path='/home' component={App} />
+      <Route exact path='/login-admin' component={loginAdmin} />
+      <Route exact path='/admin' component={Admin} />
       <Route path='/blocks' component={Blocks} />
       <Route path='/conduct-transaction' component={ConductTransaction} />
       <Route path='/transaction-pool' component={TransactionPool} />

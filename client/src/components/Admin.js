@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
-class App extends Component {
+class Admin extends Component {
   state = { walletInfo: {} };
 
   componentDidMount() {
@@ -16,7 +16,7 @@ class App extends Component {
 
     return (
       <div className='App'>
-      <div className='Pinggir'>Halo,{name}</div>
+      <div className='Pinggir'>Halo, {name}</div>
       <br/>
         <img className='logo' src={logo}></img>
         <br />
@@ -26,7 +26,7 @@ class App extends Component {
         <br />
         <div><Link to='/blocks'>Blocks</Link></div>
         <div><Link to='/conduct-transaction'>Jual Beli</Link></div>
-        
+        <div><Link to='/production'>Lapor Produksi Beras</Link></div>
         <div><Link to='/transaction-pool'>Daftar Transaksi</Link></div>
         <div><Link to='/search'>Pencarian Instansi</Link></div>
         <div><Link to='/search-by-brand'>Pencarian Merk</Link></div>
@@ -40,4 +40,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Admin;

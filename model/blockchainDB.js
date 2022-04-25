@@ -8,7 +8,11 @@ const blockchainSchema = new Schema({
       hash: String,
       data: Object,
       nonce: Number,
-      difficulty: Number
+      difficulty: Number,
+      passing: {
+        type: String,
+        default: 'yes'
+      }
     }
   });
   

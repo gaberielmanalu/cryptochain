@@ -1,10 +1,33 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Account from './Account';
 import history from '../history';
 
+
+const POLL_INERVAL_MS = 1000;
+
 class Search extends Component {
-  state = { address: ''};
+  state = { address: '',  knownAddresses: []};
+
+  fetchAccountPoolMap = () => {
+    fetch(`${document.location.origin}/api/get-contact`)
+        .then(response => response.json())
+        .then(json => this.setState({ knownAddresses: json }));
+    }
+
+    componentDidMount() {
+      this.fetchAccountPoolMap();
+  
+      this.fetchPoolMapInterval = setInterval(
+        () => this.fetchAccountPoolMap(),
+        POLL_INERVAL_MS
+      );
+    }
+  
+    componentWillUnmount() {
+      clearInterval(this.fetchPoolMapInterval);
+    }
 
   updateAddress = event => {
     this.setState({ address: event.target.value });
@@ -28,6 +51,18 @@ class Search extends Component {
     return (
       <div className='Search'>
         <Link to='/home'>Home</Link>
+        <h4>Known Addresses</h4>
+        {
+          Object.values(this.state.knownAddresses).map(account => {
+            return (
+              <div key={account.id}>
+                <hr />
+                <Account account={account} />
+              </div>
+            )
+          })
+        }
+        <hr />
         <h3>Cari Riwayat Instance: </h3>
         <br/>
         <FormGroup>

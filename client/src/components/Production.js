@@ -49,7 +49,7 @@ class Production extends Component {
     }).then(response => response.json())
       .then(json => {
         alert(json.message || json.type);
-        history.push('/transaction-pool');
+        history.push('/admin');
       });
   }
   

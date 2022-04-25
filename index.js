@@ -60,7 +60,8 @@ if(process.env.GENERATE_PEER_PORT === 'true'){
 }
 const PORT = PEER_PORT || DEFAULT_PORT;
 
-const dbURI = 'mongodb+srv://gabe:1234@blockchain.4sedk.mongodb.net/rantai-pasok?retryWrites=true&w=majority';
+const dbURI = 'mongodb://gabe:1234@blockchain-shard-00-00.4sedk.mongodb.net:27017,blockchain-shard-00-01.4sedk.mongodb.net:27017,blockchain-shard-00-02.4sedk.mongodb.net:27017/rantai-pasok?ssl=true&replicaSet=atlas-ie8ybu-shard-0&authSource=admin&retryWrites=true&w=majority';
+
 mongoose.connect(dbURI)
 .then((result) => {
   app.listen(PORT,() => { 
@@ -83,12 +84,13 @@ async function inject(){
       transactionPool.setTransaction(Transaction.Transaction);
     }
   }
+  blockchain.clearChain();
   const blockchainInject = await blockchainDB.find();
   //console.log(transactionInject.Transaction.input.signature);
     for(Block of blockchainInject){
-
       blockchain.chain.push(Block.Block);
     }
+  
 
 };
 
