@@ -9,6 +9,16 @@ const POLL_INERVAL_MS = 1000;
 class TransactionPool extends Component {
   state = { transactionPoolMap: {} };
 
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }   
+
   fetchTransactionPoolMap = () => {
     fetch(`${document.location.origin}/api/transaction-pool-map`)
       .then(response => response.json())
@@ -28,6 +38,7 @@ class TransactionPool extends Component {
   }
 
    componentDidMount() {
+    this.refreshToken();
     this.fetchTransactionPoolMap();
 
     this.fetchPoolMapInterval = setInterval(

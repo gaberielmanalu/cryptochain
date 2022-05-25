@@ -4,47 +4,74 @@ import { Link } from 'react-router-dom';
 import history from '../history';
 
 class Login extends Component {
-  state = { name: ''};
+  state = { username: '', password:'', role:'admin'};
 
-  updateName = event => {
-    this.setState({ name: event.target.value });
+  updateUsername = event => {
+    this.setState({ username: event.target.value });
   }
 
-  conductName = () => {
-    const { name } = this.state;
+  updatePassword = event => {
+    this.setState({ password: event.target.value });
+  }
 
-    fetch(`${document.location.origin}/api/add-name`, {
+  updateRole = event => {
+    this.setState({ role: event.target.value });
+  }
+
+  checkData = () => {
+    const { username, password } = this.state;
+
+    fetch(`${document.location.origin}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ username, password })
     }).then(response => response.json())
       .then(json => {
         alert(json.message || json.type);
-        history.push('/home');
+        if (json.type === 'successAdmin'){
+          history.push('/admin');
+        } else if (json.type === 'successUser') {
+          history.push('/home');
+        } else {
+          history.push('/');
+        }
+        
       });
   }
   
   render() {
+    const {role}= this.state;
     return (
       <div className='Login'>
-        <Link to='/home'>Home</Link>
-        <h3>Masukkan nama Instansi:</h3>
-        <br/>
+        <label>Username: </label>
         <FormGroup>
           <FormControl
             input='text'
-            placeholder='name'
-            value={this.state.name}
-            onChange={this.updateName}
+            placeholder='username'
+            value={this.state.username}
+            onChange={this.updateUsername}
+          />
+        </FormGroup>
+
+        <label>Password: </label>
+        <FormGroup>
+          <FormControl
+            input='password'
+            type='password'
+            placeholder='*******'
+            value={this.state.password}
+            onChange={this.updatePassword}
           />
         </FormGroup>
         <div>
           <Button
             bsStyle="danger"
-            onClick={this.conductName}
+            onClick={this.checkData}
           >
-            Submit
+            Login
           </Button>
+          <br/>
+          <Link to='/signup'>Signup</Link>
         </div>
       </div>
     )

@@ -3,16 +3,25 @@ const express = require('express');
 const request = require('request');
 const path = require('path');
 const mongoose =  require('mongoose');
+const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+
+
 
 const Blockchain = require('./blockchain');
 const PubSub = require('./app/pubsub');
 const TransactionPool = require('./wallet/transaction-pool');
 const transactionPoolDB = require('./model/transactionPoolDB');
 const blockchainDB = require('./model/blockchainDB');
+const signupDB = require('./model/signupDB');
 const WalletPool = require('./wallet/wallet-pool');
 const Account = require('./wallet/account');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner');
+
 
 /*
   var someVar = [];
@@ -47,6 +56,7 @@ const pubsub = new PubSub({ blockchain, transactionPool, wallet, walletPool});
 const transactionMiner = new TransactionMiner({
     blockchain, transactionPool, wallet, pubsub
 });
+let user = {};
 
 let listTransaction = {};
 let searchedAddress = {};
@@ -60,9 +70,10 @@ if(process.env.GENERATE_PEER_PORT === 'true'){
 }
 const PORT = PEER_PORT || DEFAULT_PORT;
 
-const dbURI = 'mongodb://gabe:1234@blockchain-shard-00-00.4sedk.mongodb.net:27017,blockchain-shard-00-01.4sedk.mongodb.net:27017,blockchain-shard-00-02.4sedk.mongodb.net:27017/rantai-pasok?ssl=true&replicaSet=atlas-ie8ybu-shard-0&authSource=admin&retryWrites=true&w=majority';
+//const dbURI = 'mongodb://gabe:1234@blockchain-shard-00-00.4sedk.mongodb.net:27017,blockchain-shard-00-01.4sedk.mongodb.net:27017,blockchain-shard-00-02.4sedk.mongodb.net:27017/rantai-pasok?ssl=true&replicaSet=atlas-ie8ybu-shard-0&authSource=admin&retryWrites=true&w=majority';
+dotenv.config()
 
-mongoose.connect(dbURI)
+mongoose.connect(process.env.DATABASE_ACCESS)
 .then((result) => {
   app.listen(PORT,() => { 
     console.log(`listening at localhost: ${PORT}`);
@@ -97,12 +108,157 @@ async function inject(){
 
 
 
-
-
+app.use(cors({ credentials:true, origin: `http://localhost:${DEFAULT_PORT}` }));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/dist')));
 
+app.get('/api/get-users', async (req,res) => {
+  try{
+    const users = await signupDB.find();
+    res.json(users);
+  } catch (err){
+    console.log(err);
+  }
 
+});
+
+app.post('/api/register', async (req,res) => {
+  const { fullName, instanceName, username, email, password, role, confPassword } = req.body;
+  try{
+    if (password === confPassword){
+      
+      const salt = await bcrypt.genSalt();
+      const hashPassword =  await bcrypt.hash(password, salt);
+      const signupToDB =   new signupDB({
+        fullName: fullName,
+        instanceName: instanceName,
+        email: email,
+        username: username,
+        password: hashPassword,
+        role: role
+      });
+    
+       signupToDB.save();
+      //signupToDB.updateOne({username: username}, {$set :{wallet:wallet}});  
+      //user = await signupDB.find({username: username});
+
+    }  else {
+      throw new Error('Password dan Confirm Password tidak sama!');
+    }
+  } catch(error){
+    return res.status(400).json({ type: 'error', message: error.message });
+  }
+
+  
+  
+  /*
+  try {
+    const signupToDB = new signupDB({
+      fullName: fullName,
+      instanceName: instanceName,
+      email: email,
+      username: username,
+      password: hashPassword,
+      role: role
+    });
+  
+    signupToDB.save()
+    .then(data =>{
+      res.json({msg:"Register Berhasil!"});
+    })
+  } catch (err) {
+    
+  }
+  */
+  res.json({ type: 'success' });
+});
+
+app.post('/api/login', async (req,res) => {
+  const user = await signupDB.find({
+    username: req.body.username
+  });
+
+  try{
+    if(!user){
+      throw new Error('Username tidak ditemukan!');
+    } else {
+      const match = await bcrypt.compare(req.body.password, user[0].password);
+    
+      if(match) {
+        const userId = user[0].id;
+        const fullName = user[0].fullName;
+        const username = user[0].username;
+        const role = user[0].role;
+
+        const accessToken = jwt.sign({userId, fullName, username}, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn : '60s'
+        });
+        const refreshToken = jwt.sign({userId, fullName, username}, process.env.REFRESH_TOKEN_SECRET, {
+          expiresIn : '1d'
+        });
+        await signupDB.updateOne({username: req.body.username}, {$set: {refresh_token: refreshToken}}); 
+        res.cookie('refreshToken', refreshToken ,{
+          httpOnly: true,
+          maxAge: 24*60*60*1000
+      });
+      if(role === 'admin'){
+        res.json({ type: 'successAdmin' });
+      } else {
+        res.json({ type: 'successUser' });
+      }
+      } else {
+        throw new Error('Wrong Password!');
+        }
+    }   
+} catch (error) {
+  return res.status(400).json({ type: 'error', message: error.message });
+  }
+});
+
+app.get('/api/refresh-token', async (req,res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if(!refreshToken){
+      throw new Error('401');
+    } else {
+      const user = await signupDB.find({ refresh_token: refreshToken});
+      if(!user[0]){
+        throw new Error ('403');
+      } else {
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+          if(err) {
+            throw new Error('401');
+          } else {
+            const userId = user[0].id;
+          const fullName = user[0].fullName;
+          const username = user[0].username;
+          const accessToken = jwt.sign({userId, fullName, username}, process.env.ACCESS_TOKEN_SECRET,{
+            expiresIn: '15s'
+          });
+          res.json({accessToken});
+          }
+        })
+      }
+      
+    }
+  } catch (err){
+    return res.status(400).json({ type: 'error', message: err.message });
+  }
+}); 
+
+app.delete('/api/logout', async (req,res) =>{
+  const refreshToken = req.cookies.refreshToken;
+    if(!refreshToken) return res.sendStatus(204);
+    const user = await signupDB.find({ refresh_token: refreshToken});
+    if(!user[0]) return res.sendStatus(204);
+    const userId =user[0].id;
+    await signupDB.updateOne(
+      { id: userId}, { $set: { refresh_token: null}}
+    );
+    res.clearCookie('refreshToken');
+    return res.sendStatus(200);
+}); 
 
 app.get('/api/blocks', (req, res) => {
   res.json(blockchain.chain);
@@ -137,7 +293,7 @@ app.post('/api/mine', (req, res) => {
   res.redirect('/api/blocks');
 });
 
-app.post('/api/transact', (req, res) => {
+app.post('/api/transact',  async (req, res) => {
   const { amount, recipient, price, brand } = req.body;
 
   let transaction = transactionPool
@@ -186,7 +342,7 @@ app.post('/api/transact', (req, res) => {
     console.log(error); // Failure
     });
   */
-  const transactionPoolToDB = new transactionPoolDB({
+  const transactionPoolToDB = await new transactionPoolDB({
       Transaction: {
         id: transaction.id,
         detail: transaction.detail,
@@ -202,10 +358,10 @@ app.post('/api/transact', (req, res) => {
       }
   });
 
-  transactionPoolToDB.save();
+  await transactionPoolToDB.save();
 
     //res.redirect('/api/add-transaction-pool');
-    res.json({ type: 'success', transaction });
+  res.json({ type: 'success', transaction });
 });
 
 /*
@@ -264,8 +420,8 @@ app.post('/api/production', (req, res) => {
 });
 
 app.get('/api/wallet-info', (req, res) => {
-  const address = wallet.publicKey;
-  const name = account.name;
+  const address = user.publicKey;
+  const name = user.instanceName;
 
   res.json({
     address,

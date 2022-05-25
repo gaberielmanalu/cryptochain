@@ -5,10 +5,24 @@ import logo from '../assets/logo.png';
 class Admin extends Component {
   state = { walletInfo: {} };
 
+  
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }    
+
   componentDidMount() {
+    this.refreshToken();
+    
     fetch(`${document.location.origin}/api/wallet-info`)
       .then(response => response.json())
       .then(json => this.setState({ walletInfo: json }));
+      
   }
 
   render() {

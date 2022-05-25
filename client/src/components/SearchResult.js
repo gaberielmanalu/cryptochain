@@ -7,6 +7,17 @@ import history from '../history';
 class SearchResult extends Component {
   state = { transactionPoolMap: {}, searchInfo: {} };
 
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }   
+
+
   clearList = () => {
     fetch(`${document.location.origin}/api/clear-list-search`)
       .then(response => {
@@ -21,6 +32,7 @@ class SearchResult extends Component {
 
 
   componentDidMount() {
+    this.refreshToken();
     fetch(`${document.location.origin}/api/get-searched-info`)
       .then(response => response.json())
       .then(json => this.setState({ searchInfo: json }));

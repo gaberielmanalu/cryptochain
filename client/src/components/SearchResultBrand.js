@@ -8,6 +8,16 @@ import history from '../history';
 class SearchResultBrand extends Component {
   state = { transactionPoolMap: {}};
 
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }   
+
   clearList = () => {
     fetch(`${document.location.origin}/api/clear-list-search`)
       .then(response => {
@@ -22,6 +32,7 @@ class SearchResultBrand extends Component {
 
 
   componentDidMount() {
+    this.refreshToken();
     fetch(`${document.location.origin}/api/get-result`)
       .then(response => response.json())
       .then(json => this.setState({ transactionPoolMap: json }));

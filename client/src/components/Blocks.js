@@ -6,7 +6,18 @@ import Block from './Block';
 class Blocks extends Component {
   state = { blocks: [], paginatedId: 1, blocksLength: 0 };
 
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }    
+
   componentDidMount() {
+    this.refreshToken();
     fetch(`${document.location.origin}/api/blocks/length`)
       .then(response => response.json())
       .then(json => this.setState({ blocksLength: json }));

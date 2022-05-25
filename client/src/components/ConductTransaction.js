@@ -14,8 +14,19 @@ class ConductTransaction extends Component {
       .then(response => response.json())
       .then(json => this.setState({ knownAddresses: json }));
   }
+
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }   
  
   componentDidMount() {
+    this.refreshToken();
     this.fetchAccountPoolMap();
 
     this.fetchPoolMapInterval = setInterval(

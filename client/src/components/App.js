@@ -1,18 +1,48 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import {Button } from 'react-bootstrap';
+import history from '../history';
+import axios from 'axios';
+
 
 class App extends Component {
-  state = { walletInfo: {} };
+  state = { walletInfo: {}, token: {}};
+
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }
+
 
   componentDidMount() {
+    this.refreshToken();
+
+    /*
     fetch(`${document.location.origin}/api/wallet-info`)
       .then(response => response.json())
-      .then(json => this.setState({ walletInfo: json }));
+      .then(json => this.setState({ walletInfo: json }));  
+
+    */
+  }
+
+ 
+  logout =  () => {
+     axios.delete(`${document.location.origin}/api/logout`)
+     .then(history.push('/'));
+     
+    
+    
   }
 
   render() {
     const { address, balance, name } = this.state.walletInfo;
+    
 
     return (
       <div className='App'>
@@ -35,7 +65,16 @@ class App extends Component {
           <div>Address: {address}</div>
           <div>Jumlah Beras: {balance} Kg</div>
         </div>
+        <Button
+            bsStyle="danger"
+            onClick={this.logout}
+          >
+            Logout
+          </Button>
       </div>
+      
+
+      
     );
   }
 }

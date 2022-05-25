@@ -6,6 +6,19 @@ import history from '../history';
 class SearchBrand extends Component {
   state = { brand: ''};
 
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }   
+
+    componentDidMount() {
+      this.refreshToken(); }
+
   updateBrand = event => {
     this.setState({ brand: event.target.value });
   }

@@ -10,6 +10,17 @@ const POLL_INERVAL_MS = 1000;
 class Production extends Component {
   state = { recipient: '' , amount: 0,  knownAddresses: [] };
 
+
+  refreshToken =  () => {
+    fetch(`${document.location.origin}/api/refresh-token`)
+        .then(response => response.json())
+        .then(json => {
+        if (json.type === 'error'){
+          history.push('/');
+        }
+        });
+    }   
+
   fetchAccountPoolMap = () => {
     fetch(`${document.location.origin}/api/get-contact`)
         .then(response => response.json())
@@ -18,6 +29,7 @@ class Production extends Component {
   
   
   componentDidMount() {
+    this.refreshToken();
     this.fetchAccountPoolMap();
 
     this.fetchPoolMapInterval = setInterval(
