@@ -14,7 +14,7 @@ class TransactionPool extends Component {
         .then(response => response.json())
         .then(json => {
         if (json.type === 'error'){
-          history.push('/');
+          history.push('/login');
         }
         });
     }   
@@ -25,17 +25,6 @@ class TransactionPool extends Component {
       .then(json => this.setState({ transactionPoolMap: json }));
   }
 
-  fetchMineTransactions = () => {
-    fetch(`${document.location.origin}/api/mine-transactions`)
-      .then(response => {
-        if (response.status === 200) {
-          alert('success');
-          history.push('/blocks');
-        } else {
-          alert('The mine-transactions block request did not complete.');
-        }
-      });
-  }
 
    componentDidMount() {
     this.refreshToken();
@@ -67,13 +56,6 @@ class TransactionPool extends Component {
             )
           })
         }
-        <hr />
-        <Button
-          bsStyle="danger"
-          onClick={this.fetchMineTransactions}
-        >
-          Mine the Transactions
-        </Button>
       </div>
     )
   }

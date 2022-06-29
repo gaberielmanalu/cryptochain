@@ -5,25 +5,16 @@ import { Link } from 'react-router-dom';
 import history from '../history';
 
 
-class SearchResultBrand extends Component {
+class SearchResultBrandUmum extends Component {
   state = { transactionPoolMap: {}};
 
-  refreshToken =  () => {
-    fetch(`${document.location.origin}/api/refresh-token`)
-        .then(response => response.json())
-        .then(json => {
-        if (json.type === 'error'){
-          history.push('/login');
-        }
-        });
-    }   
 
   clearList = () => {
     fetch(`${document.location.origin}/api/clear-list-search`)
       .then(response => {
         if (response.status === 200) {
           alert('success');
-          history.push('/home');
+          history.push('/');
         } else {
           alert('The clear transactions block request did not complete.');
         }
@@ -32,7 +23,6 @@ class SearchResultBrand extends Component {
 
 
   componentDidMount() {
-    this.refreshToken();
     fetch(`${document.location.origin}/api/get-result`)
       .then(response => response.json())
       .then(json => this.setState({ transactionPoolMap: json }));
@@ -67,4 +57,4 @@ class SearchResultBrand extends Component {
   }
 }
 
-export default SearchResultBrand;
+export default SearchResultBrandUmum;

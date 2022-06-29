@@ -7,7 +7,7 @@ import history from '../history';
 
 const POLL_INERVAL_MS = 1000;
 
-class Search extends Component {
+class SearchAdmin extends Component {
   state = { address: '',  knownAddresses: []};
 
   refreshToken =  () => {
@@ -61,7 +61,7 @@ class Search extends Component {
   render() {
     return (
       <div className='Search'>
-        <Link to='/home'>Home</Link>
+        <Link to='/Admin'>Home</Link>
         <h4>Known Addresses</h4>
         {
           Object.values(this.state.knownAddresses).map(account => {
@@ -97,4 +97,4 @@ class Search extends Component {
   }
 };
 
-export default Search;
+export default SearchAdmin;

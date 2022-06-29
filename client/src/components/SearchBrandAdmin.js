@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import history from '../history';
 
-class SearchBrand extends Component {
+class SearchBrandAdmin extends Component {
   state = { brand: ''};
 
   refreshToken =  () => {
@@ -40,7 +40,7 @@ class SearchBrand extends Component {
   render() {
     return (
       <div className='SearchBrand'>
-        <Link to='/home'>Home</Link>
+        <Link to='/Admin'>Home</Link>
         <h3>Cari Peredaran Merek:</h3>
         <br/>
         <FormGroup>
@@ -64,4 +64,4 @@ class SearchBrand extends Component {
   }
 };
 
-export default SearchBrand;
+export default SearchBrandAdmin;

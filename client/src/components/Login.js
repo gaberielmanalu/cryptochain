@@ -33,7 +33,7 @@ class Login extends Component {
         } else if (json.type === 'successUser') {
           history.push('/home');
         } else {
-          history.push('/');
+          history.push('/login');
         }
         
       });

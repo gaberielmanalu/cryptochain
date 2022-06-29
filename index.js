@@ -56,7 +56,7 @@ const pubsub = new PubSub({ blockchain, transactionPool, wallet, walletPool});
 const transactionMiner = new TransactionMiner({
     blockchain, transactionPool, wallet, pubsub
 });
-let user = {};
+let userGlobal = {};
 
 let listTransaction = {};
 let searchedAddress = {};
@@ -140,6 +140,7 @@ app.post('/api/register', async (req,res) => {
       });
     
        signupToDB.save();
+
       //signupToDB.updateOne({username: username}, {$set :{wallet:wallet}});  
       //user = await signupDB.find({username: username});
 
@@ -178,6 +179,7 @@ app.post('/api/login', async (req,res) => {
   const user = await signupDB.find({
     username: req.body.username
   });
+  
 
   try{
     if(!user){
@@ -190,6 +192,13 @@ app.post('/api/login', async (req,res) => {
         const fullName = user[0].fullName;
         const username = user[0].username;
         const role = user[0].role;
+        userGlobal = user[0].instanceName;
+
+        account.addAttribute(userGlobal, wallet.publicKey);
+
+        walletPool.setWallet(account);
+
+        pubsub.broadcastAccount(account);
 
         const accessToken = jwt.sign({userId, fullName, username}, process.env.ACCESS_TOKEN_SECRET, {
           expiresIn : '60s'
@@ -420,8 +429,8 @@ app.post('/api/production', (req, res) => {
 });
 
 app.get('/api/wallet-info', (req, res) => {
-  const address = user.publicKey;
-  const name = user.instanceName;
+  const address = wallet.publicKey;
+  const name = userGlobal;
 
   res.json({
     address,

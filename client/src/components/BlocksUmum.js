@@ -3,21 +3,11 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Block from './Block';
 
-class Blocks extends Component {
+class BlocksUmum extends Component {
   state = { blocks: [], paginatedId: 1, blocksLength: 0 };
 
-  refreshToken =  () => {
-    fetch(`${document.location.origin}/api/refresh-token`)
-        .then(response => response.json())
-        .then(json => {
-        if (json.type === 'error'){
-          history.push('/login');
-        }
-        });
-    }    
 
   componentDidMount() {
-    this.refreshToken();
     fetch(`${document.location.origin}/api/blocks/length`)
       .then(response => response.json())
       .then(json => this.setState({ blocksLength: json }));
@@ -36,7 +26,7 @@ class Blocks extends Component {
       
     return (
       <div>
-        <div><Link to='/home'>Home</Link></div>
+        <div><Link to='/'>Home</Link></div>
         <h3>Blocks</h3>
         <div>
           {
@@ -65,4 +55,4 @@ class Blocks extends Component {
   }
 }
 
-export default Blocks;
+export default BlocksUmum;

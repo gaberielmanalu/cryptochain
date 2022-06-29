@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import history from '../history';
 
 
-class SearchResultBrand extends Component {
+class SearchResultBrandAdmin extends Component {
   state = { transactionPoolMap: {}};
 
   refreshToken =  () => {
@@ -23,7 +23,7 @@ class SearchResultBrand extends Component {
       .then(response => {
         if (response.status === 200) {
           alert('success');
-          history.push('/home');
+          history.push('/Admin');
         } else {
           alert('The clear transactions block request did not complete.');
         }
@@ -67,4 +67,4 @@ class SearchResultBrand extends Component {
   }
 }
 
-export default SearchResultBrand;
+export default SearchResultBrandAdmin;

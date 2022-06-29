@@ -6,7 +6,7 @@ import history from '../history';
 
 const POLL_INERVAL_MS = 1000;
 
-class ConductTransaction extends Component {
+class ConductTransactionAdmin extends Component {
   state = { recipient: '', amount: 0, price: 0, brand: '',  knownAddresses: [] };
 
   fetchAccountPoolMap = () => {
@@ -72,7 +72,7 @@ class ConductTransaction extends Component {
   render() {
     return (
       <div className='ConductTransaction'>
-        <Link to='/home'>Home</Link>
+        <Link to='/Admin'>Home</Link>
         <h3>Conduct a Transaction</h3>
         <br />
         <h4>Known Addresses</h4>
@@ -133,4 +133,4 @@ class ConductTransaction extends Component {
   }
 };
 
-export default ConductTransaction;
+export default ConductTransactionAdmin;

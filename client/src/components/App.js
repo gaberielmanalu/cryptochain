@@ -14,7 +14,7 @@ class App extends Component {
         .then(response => response.json())
         .then(json => {
         if (json.type === 'error'){
-          history.push('/');
+          history.push('/login');
         }
         });
     }
@@ -22,19 +22,17 @@ class App extends Component {
 
   componentDidMount() {
     this.refreshToken();
-
-    /*
     fetch(`${document.location.origin}/api/wallet-info`)
       .then(response => response.json())
       .then(json => this.setState({ walletInfo: json }));  
 
-    */
+
   }
 
  
   logout =  () => {
      axios.delete(`${document.location.origin}/api/logout`)
-     .then(history.push('/'));
+     .then(history.push('/login'));
      
     
     

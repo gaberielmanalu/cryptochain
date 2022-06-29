@@ -3,21 +3,10 @@ import { FormGroup, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import history from '../history';
 
-class SearchBrand extends Component {
+class SearchBrandUmum extends Component {
   state = { brand: ''};
 
-  refreshToken =  () => {
-    fetch(`${document.location.origin}/api/refresh-token`)
-        .then(response => response.json())
-        .then(json => {
-        if (json.type === 'error'){
-          history.push('/login');
-        }
-        });
-    }   
 
-    componentDidMount() {
-      this.refreshToken(); }
 
   updateBrand = event => {
     this.setState({ brand: event.target.value });
@@ -40,7 +29,7 @@ class SearchBrand extends Component {
   render() {
     return (
       <div className='SearchBrand'>
-        <Link to='/home'>Home</Link>
+        <Link to='/'>Home</Link>
         <h3>Cari Peredaran Merek:</h3>
         <br/>
         <FormGroup>
@@ -64,4 +53,4 @@ class SearchBrand extends Component {
   }
 };
 
-export default SearchBrand;
+export default SearchBrandUmum;

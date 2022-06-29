@@ -12,7 +12,7 @@ class SearchResult extends Component {
         .then(response => response.json())
         .then(json => {
         if (json.type === 'error'){
-          history.push('/');
+          history.push('/login');
         }
         });
     }   

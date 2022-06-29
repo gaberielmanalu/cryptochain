@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Block from './Block';
 
-class Blocks extends Component {
+class BlocksAdmin extends Component {
   state = { blocks: [], paginatedId: 1, blocksLength: 0 };
 
   refreshToken =  () => {
@@ -36,7 +36,7 @@ class Blocks extends Component {
       
     return (
       <div>
-        <div><Link to='/home'>Home</Link></div>
+        <div><Link to='/Admin'>Home</Link></div>
         <h3>Blocks</h3>
         <div>
           {
@@ -65,4 +65,4 @@ class Blocks extends Component {
   }
 }
 
-export default Blocks;
+export default BlocksAdmin;

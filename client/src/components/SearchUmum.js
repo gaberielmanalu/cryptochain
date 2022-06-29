@@ -7,18 +7,9 @@ import history from '../history';
 
 const POLL_INERVAL_MS = 1000;
 
-class Search extends Component {
+class SearchUmum extends Component {
   state = { address: '',  knownAddresses: []};
 
-  refreshToken =  () => {
-    fetch(`${document.location.origin}/api/refresh-token`)
-        .then(response => response.json())
-        .then(json => {
-        if (json.type === 'error'){
-          history.push('/login');
-        }
-        });
-    }   
 
   fetchAccountPoolMap = () => {
     fetch(`${document.location.origin}/api/get-contact`)
@@ -27,7 +18,6 @@ class Search extends Component {
     }
 
     componentDidMount() {
-      this.refreshToken();
       this.fetchAccountPoolMap();
   
       this.fetchPoolMapInterval = setInterval(
@@ -61,7 +51,7 @@ class Search extends Component {
   render() {
     return (
       <div className='Search'>
-        <Link to='/home'>Home</Link>
+        <Link to='/'>Home</Link>
         <h4>Known Addresses</h4>
         {
           Object.values(this.state.knownAddresses).map(account => {
@@ -97,4 +87,4 @@ class Search extends Component {
   }
 };
 
-export default Search;
+export default SearchUmum;

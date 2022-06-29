@@ -16,7 +16,7 @@ class Production extends Component {
         .then(response => response.json())
         .then(json => {
         if (json.type === 'error'){
-          history.push('/');
+          history.push('/login');
         }
         });
     }   
@@ -68,7 +68,7 @@ class Production extends Component {
   render() {
     return (
       <div className='Production'>
-        <Link to='/home'>Home</Link>
+        <Link to='/Admin'>Home</Link>
         <h3>Lapor Produksi Beras</h3>
         <br />
         <h4>Known Addresses</h4>

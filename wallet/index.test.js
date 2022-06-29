@@ -77,7 +77,7 @@ describe('Wallet',()=>{
         }); 
 
         describe('and a chain is passed',()=>{
-            it('calss `Wallet.calculateBalance`',()=>{
+            it('class `Wallet.calculateBalance`',()=>{
                 const calculateBalanceMock = jest.fn();
 
                 originalCalculateBalance = Wallet.calculateBalance;
